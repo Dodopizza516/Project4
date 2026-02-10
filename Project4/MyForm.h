@@ -130,6 +130,7 @@ namespace Project4 {
 			this->tabPage2->TabIndex = 1;
 			this->tabPage2->Text = L"Вопрос 2";
 			this->tabPage2->UseVisualStyleBackColor = true;
+			this->tabPage2->Click += gcnew System::EventHandler(this, &MyForm::tabPage2_Click);
 			// 
 			// tabPage3
 			// 
@@ -277,5 +278,7 @@ namespace Project4 {
 
 		}
 #pragma endregion
-	};
+	private: System::Void tabPage2_Click(System::Object^ sender, System::EventArgs^ e) {
+	}
+};
 }
