@@ -1,4 +1,9 @@
 #pragma once
+#include <iostream>
+int main() {
+	std::cout << "Hello, World!" << std::endl;
+	return 0;
+}
 
 namespace Project4 {
 
@@ -271,6 +276,7 @@ namespace Project4 {
 			this->Controls->Add(this->tabControl1);
 			this->Name = L"MyForm";
 			this->Text = L"MyForm";
+			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 			this->tabControl1->ResumeLayout(false);
 			this->tabPage1->ResumeLayout(false);
 			this->tabPage1->PerformLayout();
@@ -280,5 +286,7 @@ namespace Project4 {
 #pragma endregion
 	private: System::Void tabPage2_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }
