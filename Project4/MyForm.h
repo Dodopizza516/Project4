@@ -135,7 +135,8 @@ private:
         infoLabel->Text = "Пройди тест и узнай на сколько ты знаешь мультфильм смешарики";
         infoLabel->AutoSize = true;
         infoLabel->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 14, FontStyle::Regular);
-        infoLabel->MaximumSize = System::Drawing::Size(700, 0);
+        infoLabel->MaximumSize = System::Drawing::Size(800, 0);
+        infoLabel->Margin = System::Windows::Forms::Padding(10);
         optionsPanel->Controls->Add(infoLabel);
 
         nextButton->Text = "Начать тест";
@@ -149,34 +150,48 @@ private:
         titleLabel->Text = "Тест по смешарикам";
         questionLabel->Text = String::Format("Вопрос {0}: {1}", index + 1, q->Text);
         questionLabel->Visible = true;
-        questionLabel->MaximumSize = System::Drawing::Size(730, 0);
+        questionLabel->MaximumSize = System::Drawing::Size(830, 0);
         questionLabel->AutoSize = true;
 
         optionsPanel->Controls->Clear();
+        optionsPanel->FlowDirection = FlowDirection::TopDown;
+        optionsPanel->WrapContents = false;
+        optionsPanel->Padding = System::Windows::Forms::Padding(15);
+        optionsPanel->AutoScroll = true;
 
         for (int i = 0; i < q->Options->Length; i++) {
+            Panel^ optionPanel = gcnew Panel();
+            optionPanel->Height = 35;
+            optionPanel->Width = optionsPanel->Width - 40;
+            optionPanel->Margin = System::Windows::Forms::Padding(5, 2, 5, 2);
+            optionPanel->BackColor = Color::Transparent;
+
             if (q->IsMultipleChoice) {
                 CheckBox^ chk = gcnew CheckBox();
                 chk->Text = q->Options[i];
                 chk->Tag = i;
+                chk->Location = Point(5, 5);
                 chk->AutoSize = true;
                 chk->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 12, FontStyle::Regular);
                 chk->Checked = userAnswers[index]->Contains(i);
                 chk->CheckedChanged += gcnew EventHandler(this, &MyForm::OptionCheckedChanged);
-                chk->Margin = System::Windows::Forms::Padding(10, 5, 0, 5);
-                optionsPanel->Controls->Add(chk);
+                chk->TextAlign = ContentAlignment::MiddleLeft;
+                optionPanel->Controls->Add(chk);
             }
             else {
                 RadioButton^ rb = gcnew RadioButton();
                 rb->Text = q->Options[i];
                 rb->Tag = i;
+                rb->Location = Point(5, 5);
                 rb->AutoSize = true;
                 rb->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 12, FontStyle::Regular);
                 rb->Checked = userAnswers[index]->Contains(i);
                 rb->CheckedChanged += gcnew EventHandler(this, &MyForm::OptionCheckedChanged);
-                rb->Margin = System::Windows::Forms::Padding(10, 5, 0, 5);
-                optionsPanel->Controls->Add(rb);
+                rb->TextAlign = ContentAlignment::MiddleLeft;
+                optionPanel->Controls->Add(rb);
             }
+
+            optionsPanel->Controls->Add(optionPanel);
         }
 
         backButton->Enabled = (index > 0);
@@ -207,7 +222,8 @@ private:
             msgLabel->AutoSize = true;
             msgLabel->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 16, FontStyle::Bold);
             msgLabel->ForeColor = Color::Red;
-            msgLabel->MaximumSize = System::Drawing::Size(700, 0);
+            msgLabel->MaximumSize = System::Drawing::Size(800, 0);
+            msgLabel->Margin = System::Windows::Forms::Padding(10);
             optionsPanel->Controls->Add(msgLabel);
         }
         else {
@@ -247,21 +263,15 @@ private:
             scoreLabel->AutoSize = true;
             scoreLabel->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 18, FontStyle::Bold);
             scoreLabel->ForeColor = (score == questions->Count) ? Color::Green : Color::Black;
-            scoreLabel->Margin = System::Windows::Forms::Padding(5, 5, 5, 15);
+            scoreLabel->Margin = System::Windows::Forms::Padding(10, 10, 10, 20);
             optionsPanel->Controls->Add(scoreLabel);
-
-            // Разделитель
-            Label^ spacerLabel = gcnew Label();
-            spacerLabel->Text = "";
-            spacerLabel->Height = 10;
-            optionsPanel->Controls->Add(spacerLabel);
 
             // Заголовок для детальных результатов
             Label^ detailHeader = gcnew Label();
             detailHeader->Text = "Детали по вопросам:";
             detailHeader->AutoSize = true;
             detailHeader->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 14, FontStyle::Bold);
-            detailHeader->Margin = System::Windows::Forms::Padding(5, 5, 5, 10);
+            detailHeader->Margin = System::Windows::Forms::Padding(10, 5, 10, 10);
             optionsPanel->Controls->Add(detailHeader);
 
             // Отображение каждого вопроса с цветовой индикацией
@@ -270,11 +280,11 @@ private:
 
                 // Создаем панель для вопроса
                 Panel^ questionPanel = gcnew Panel();
-                questionPanel->Height = 110;
                 questionPanel->Width = optionsPanel->Width - 30;
-                questionPanel->Margin = System::Windows::Forms::Padding(5, 3, 5, 3);
+                questionPanel->Height = 90;
+                questionPanel->Margin = System::Windows::Forms::Padding(10, 5, 10, 5);
                 questionPanel->BorderStyle = BorderStyle::FixedSingle;
-                questionPanel->Padding = System::Windows::Forms::Padding(8);
+                questionPanel->Padding = System::Windows::Forms::Padding(10);
 
                 // Устанавливаем цвет фона в зависимости от правильности ответа
                 if (results[i]) {
@@ -287,7 +297,7 @@ private:
                 // Номер вопроса
                 Label^ numLabel = gcnew Label();
                 numLabel->Text = String::Format("Вопрос {0}:", i + 1);
-                numLabel->Location = Point(8, 5);
+                numLabel->Location = Point(10, 8);
                 numLabel->AutoSize = true;
                 numLabel->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 11, FontStyle::Bold);
                 questionPanel->Controls->Add(numLabel);
@@ -306,10 +316,10 @@ private:
                 }
 
                 userLabel->Text = String::Format("Ваш ответ: {0}", userAnswerStr);
-                userLabel->Location = Point(8, 30);
+                userLabel->Location = Point(10, 35);
                 userLabel->AutoSize = true;
                 userLabel->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 10, FontStyle::Regular);
-                userLabel->MaximumSize = System::Drawing::Size(questionPanel->Width - 20, 0);
+                userLabel->MaximumSize = System::Drawing::Size(questionPanel->Width - 20, 40);
                 questionPanel->Controls->Add(userLabel);
 
                 // Правильный ответ
@@ -321,11 +331,11 @@ private:
                 }
 
                 correctLabel->Text = String::Format("Правильно: {0}", correctAnswerStr);
-                correctLabel->Location = Point(8, 60);
+                correctLabel->Location = Point(10, 60);
                 correctLabel->AutoSize = true;
                 correctLabel->Font = gcnew System::Drawing::Font("Microsoft Sans Serif", 10, FontStyle::Bold);
                 correctLabel->ForeColor = Color::DarkGreen;
-                correctLabel->MaximumSize = System::Drawing::Size(questionPanel->Width - 20, 0);
+                correctLabel->MaximumSize = System::Drawing::Size(questionPanel->Width - 20, 40);
                 questionPanel->Controls->Add(correctLabel);
 
                 optionsPanel->Controls->Add(questionPanel);
@@ -356,10 +366,16 @@ private:
                 currentAnswers->Clear();
                 currentAnswers->Add(value);
 
+                // Снимаем выделение с других RadioButton
                 for each (Control ^ ctrl in optionsPanel->Controls) {
-                    RadioButton^ otherRb = dynamic_cast<RadioButton^>(ctrl);
-                    if (otherRb != nullptr && otherRb != rb) {
-                        otherRb->Checked = false;
+                    Panel^ panel = dynamic_cast<Panel^>(ctrl);
+                    if (panel != nullptr) {
+                        for each (Control ^ subCtrl in panel->Controls) {
+                            RadioButton^ otherRb = dynamic_cast<RadioButton^>(subCtrl);
+                            if (otherRb != nullptr && otherRb != rb) {
+                                otherRb->Checked = false;
+                            }
+                        }
                     }
                 }
             }
@@ -475,16 +491,18 @@ private:
         // optionsPanel
         // 
         this->optionsPanel->Location = System::Drawing::Point(20, 165);
-        this->optionsPanel->Size = System::Drawing::Size(860, 400);
+        this->optionsPanel->Size = System::Drawing::Size(860, 500);
         this->optionsPanel->FlowDirection = FlowDirection::TopDown;
         this->optionsPanel->AutoScroll = true;
         this->optionsPanel->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
         this->optionsPanel->Padding = System::Windows::Forms::Padding(10);
-        this->optionsPanel->Margin = System::Windows::Forms::Padding(5);
+        this->optionsPanel->Margin = System::Windows::Forms::Padding(0);
+        this->optionsPanel->WrapContents = false;
+        this->optionsPanel->BackColor = System::Drawing::Color::White;
         // 
         // backButton
         // 
-        this->backButton->Location = System::Drawing::Point(20, 580);
+        this->backButton->Location = System::Drawing::Point(20, 680);
         this->backButton->Size = System::Drawing::Size(140, 45);
         this->backButton->Text = L"Назад";
         this->backButton->UseVisualStyleBackColor = true;
@@ -493,7 +511,7 @@ private:
         // 
         // nextButton
         // 
-        this->nextButton->Location = System::Drawing::Point(740, 580);
+        this->nextButton->Location = System::Drawing::Point(740, 680);
         this->nextButton->Size = System::Drawing::Size(140, 45);
         this->nextButton->Text = L"Вперед";
         this->nextButton->UseVisualStyleBackColor = true;
@@ -504,7 +522,7 @@ private:
         // 
         this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
         this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-        this->ClientSize = System::Drawing::Size(900, 650);
+        this->ClientSize = System::Drawing::Size(900, 750);
         this->Controls->Add(this->nextButton);
         this->Controls->Add(this->backButton);
         this->Controls->Add(this->optionsPanel);
